@@ -1,0 +1,2717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌞 Stormy the Solar Storm</title>
+    <meta name="description" content="Making space weather fun, visual, and understandable for kids worldwide.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Import Google Fonts for main heading -->
+    <link <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==================== CSS VARIABLES ==================== */
+        :root {
+            --color-purple-dark: #7B1FA2;
+            --color-purple-light: #BA68C8;
+            --color-blue-dark: #42A5F5;
+            --color-orange: #FF7043;
+            --color-green: #26C6DA;
+            --color-pink: #FF4081;
+            --font-header: 'Poppins', sans-serif;
+	    --font-body: 'Open Sans', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* ==================== LOADING SCREEN ==================== */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            font-size: 4rem;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ==================== PARTICLES BACKGROUND ==================== */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-100px) translateX(50px); }
+            50% { transform: translateY(-200px) translateX(-50px); }
+            75% { transform: translateY(-100px) translateX(100px); }
+        }
+
+        /* ==================== BACK TO TOP BUTTON ==================== */
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--color-orange);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        #back-to-top:hover {
+            background: var(--color-purple-dark);
+            transform: translateY(-5px);
+        }
+
+        /* ==================== NAVIGATION BAR ==================== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: linear-gradient(135deg, var(--color-purple-dark) 0%, var(--color-purple-light) 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-family: var(--font-header);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .icon-stormy {
+            color: var(--color-orange); 
+            margin-right: 10px;
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .nav-desktop {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .navbar nav a:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #FFE082;
+            transform: translateY(-2px);
+        }
+
+        /* ==================== HAMBURGER MENU ==================== */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--color-purple-dark) 0%, var(--color-purple-light) 100%);
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 99;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(10px);
+        }
+
+        /* ==================== PROGRESS BAR ==================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: var(--color-orange);
+            z-index: 101;
+            transition: width 0.1s ease;
+        }
+
+        /* ==================== ACHIEVEMENT TOAST ==================== */
+        .achievement-toast {
+            position: fixed;
+            top: 80px;
+            right: -400px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: right 0.5s ease;
+            max-width: 350px;
+        }
+
+        .achievement-toast.show {
+            right: 20px;
+        }
+
+        .achievement-toast h4 {
+            color: var(--color-purple-dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ==================== HERO SECTION ==================== */
+      	 .hero-section {
+    height: 70vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+}
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 112, 67, 0.3) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .floating-stormy {
+            position: absolute;
+            font-size: 6rem;
+            animation: floatStormy 6s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes floatStormy {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -30px) rotate(5deg); }
+            50% { transform: translate(0, -50px) rotate(-5deg); }
+            75% { transform: translate(-50px, -30px) rotate(5deg); }
+        }
+
+        .hero-content {
+            z-index: 2;
+            color: white;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            font-family: var(--font-header);
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .cta-buttons a {
+            margin: 10px;
+        }
+
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-orange { background-color: var(--color-orange); color: white; }
+        .btn-purple { background-color: var(--color-purple-dark); color: white; }
+        .btn-green { background-color: var(--color-green); color: white; }
+        .btn-blue { background-color: var(--color-blue-dark); color: white; }
+        .btn-pink-upload { 
+            background: linear-gradient(90deg, #F06292 0%, #BA68C8 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(236, 64, 122, 0.4);
+        }
+
+        /* ==================== GENERAL SECTIONS ==================== */
+        .section-padded {
+            padding: 80px 5%;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-family: var(--font-header);
+        }
+
+        .section-tagline {
+            font-size: 1.3rem;
+            color: #616161;
+            margin-bottom: 50px;
+        }
+
+        .purple-text { color: var(--color-purple-dark); }
+        .white-text { color: white; }
+        .dark-text { color: #333; }
+        .brown-text { color: #6D4C41; }
+
+        /* ==================== FUN FACTS BANNER ==================== */
+        .fun-fact-banner {
+            background: linear-gradient(135deg, #FFE082 0%, #FFAB91 100%);
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin: 30px auto;
+            max-width: 900px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .fun-fact-banner:hover {
+            transform: scale(1.02);
+        }
+
+        .fun-fact-banner h4 {
+            color: var(--color-purple-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .fun-fact-banner p {
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        /* ==================== CHARACTER GRID ==================== */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .character-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(123, 31, 162, 0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .character-card:hover::before {
+            transform: scale(1);
+        }
+
+        .character-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .character-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .character-card:hover .character-icon {
+            transform: scale(1.15) rotate(10deg);
+        }
+
+        .character-card h3 {
+            color: var(--color-purple-dark);
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .character-card p {
+            font-size: 1rem;
+            color: var(--color-orange);
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ==================== NASA FLEET SECTION ==================== */
+        .blue-background { 
+            background: linear-gradient(135deg, #42A5F5 0%, #2196F3 100%);
+        }
+
+        .fleet-map-container {
+            max-width: 1100px;
+            height: 550px;
+            margin: 40px auto;
+            background: linear-gradient(135deg, #1a237e 0%, #311b92 100%);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .sun-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #FFF176 0%, #FFB300 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 193, 7, 0.8);
+            animation: sunPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes sunPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .satellite-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            animation: orbit 20s linear infinite;
+        }
+
+        .satellite-marker:hover {
+            transform: scale(1.3);
+            z-index: 10;
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+        }
+
+        .satellite-marker:nth-child(2) { animation-duration: 15s; }
+        .satellite-marker:nth-child(3) { animation-duration: 25s; }
+        .satellite-marker:nth-child(4) { animation-duration: 18s; }
+
+        .satellite-tooltip {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .satellite-marker:hover .satellite-tooltip {
+            opacity: 1;
+        }
+
+        .fleet-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1300px;
+            margin: 50px auto 0;
+        }
+
+        .info-card {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: left;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-card:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .info-card h3 {
+            color: var(--color-orange);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        /* ==================== LIVE DATA WIDGET ==================== */
+        .live-data-widget {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .live-data-widget h3 {
+            color: var(--color-purple-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .data-item {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .data-item h4 {
+            color: var(--color-blue-dark);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .data-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--color-purple-dark);
+        }
+
+        .data-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .status-calm {
+            background: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        .status-active {
+            background: #FFE082;
+            color: #F57F17;
+        }
+
+        .status-storm {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        /* ==================== GAMES SECTION ==================== */
+        .light-background {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+        }
+
+        .game-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 35px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 5px 15px;
+            border: 2px solid var(--color-blue-dark);
+            background: white;
+            color: var(--color-blue-dark);
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.active, .difficulty-btn:hover {
+            background: var(--color-blue-dark);
+            color: white;
+        }
+
+        .game-card-icon {
+            width: 100%;
+            height: 180px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .game-card h3 {
+            color: var(--color-blue-dark);
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+        }
+
+        .game-card p {
+            font-size: 1rem;
+            color: #616161;
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .high-score {
+            background: linear-gradient(135deg, #FFE082 0%, #FFAB91 100%);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* ==================== GAME CANVAS ==================== */
+        .game-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-canvas {
+            width: 100%;
+            height: 400px;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #E8EAF6 0%, #C5CAE9 100%);
+        }
+
+        .game-score {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-purple-dark);
+            margin: 15px 0;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .game-object {
+            position: absolute;
+            transition: all 0.1s linear;
+        }
+
+        .game-timer {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* ==================== GALLERY SECTION ==================== */
+        .purple-background { 
+            background: linear-gradient(135deg, #7B1FA2 0%, #BA68C8 100%);
+        }
+
+        .gallery-comparison {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .gallery-item {
+            width: 45%;
+            max-width: 450px;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .gallery-item p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .gallery-item-image {
+            width: 100%;
+            height: 300px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item-image:hover {
+            transform: scale(1.05);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .share-btn.twitter { background: #1DA1F2; }
+        .share-btn.facebook { background: #4267B2; }
+        .share-btn.pinterest { background: #E60023; }
+
+        /* ==================== TEACHERS SECTION ==================== */
+        .light-brown-background {
+            background: linear-gradient(135deg, #FFF9C4 0%, #FFF59D 100%);
+        }
+
+        .teachers-image-container {
+            max-width: 1000px;
+            height: 400px;
+            margin: 40px auto 60px;
+            background: linear-gradient(135deg, #81C784 0%, #66BB6A 100%);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .teachers-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .resource-download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+	.download-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .download-card i {
+            font-size: 3.5rem;
+            color: var(--color-purple-dark);
+            margin-bottom: 20px;
+        }
+
+        .download-card h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .download-card p {
+            font-size: 1rem;
+            color: #888;
+            flex-grow: 1;
+            margin-bottom: 25px;
+        }
+
+        /* ==================== EXTERNAL RESOURCES ==================== */
+        .external-resources-box {
+            max-width: 1300px;
+            margin: 60px auto 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .external-resources-title {
+            text-align: left;
+            font-size: 2rem;
+            color: var(--color-purple-dark);
+            margin-bottom: 25px;
+        }
+
+        .external-resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .resource-link-card {
+            display: flex;
+            align-items: center;
+            padding: 18px 28px;
+            background-color: white;
+            border-radius: 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.05rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .resource-link-card:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .resource-link-card i {
+            font-size: 1.5rem;
+            color: var(--color-orange);
+            margin-right: 15px;
+        }
+
+        /* ==================== FOOTER ==================== */
+        .footer-section {
+            padding: 60px 5%;
+            background: linear-gradient(135deg, #E8EAF6 0%, #C5CAE9 100%);
+            color: #333;
+            text-align: left;
+        }
+
+        .footer-content-grid {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1300px;
+            margin: 0 auto 40px;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-column h4 {
+            font-size: 1.4rem;
+            color: var(--color-purple-dark);
+            margin-bottom: 20px;
+            font-family: var(--font-header);
+        }
+
+        .footer-column p {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .footer-logos img {
+            width: 70px;
+            height: 35px;
+            background-color: white;
+            border-radius: 8px;
+            margin-right: 15px;
+            object-fit: contain;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-link {
+            color: var(--color-purple-dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            text-decoration: underline;
+            color: var(--color-orange);
+        }
+
+        .footer-credits-bar {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 2px solid rgba(123, 31, 162, 0.2);
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.4);
+            position: relative;
+            max-width: 700px;
+            width: 90%;
+            animation: slideIn 0.4s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content.small-modal {
+            max-width: 550px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            color: var(--color-orange);
+        }
+
+        .character-modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .character-modal-header .character-icon {
+            font-size: 3rem;
+            margin: 0;
+        }
+
+        .character-modal-header h2 {
+            color: var(--color-purple-dark);
+            font-size: 2rem;
+        }
+
+        .story-box, .fact-box {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 2px solid #90CAF9;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .story-box h4, .fact-box h4 {
+            color: var(--color-purple-dark);
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .story-box p, .fact-box p {
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .quiz-section {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border: 2px solid #FFB74D;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .quiz-section h4 {
+            color: var(--color-purple-dark);
+            margin-bottom: 15px;
+        }
+
+        .quiz-option {
+            background: white;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            background: #f5f5f5;
+            border-color: var(--color-purple-dark);
+        }
+
+        .quiz-option.correct {
+            background: #C8E6C9;
+            border-color: #4CAF50;
+        }
+
+        .quiz-option.incorrect {
+            background: #FFCDD2;
+            border-color: #F44336;
+        }
+
+        /* ==================== UPLOAD MODAL ==================== */
+        .upload-area {
+            border: 3px dashed var(--color-purple-dark);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .upload-area:hover {
+            border-color: var(--color-pink);
+            background-color: #fce4ec;
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--color-purple-dark);
+            margin-bottom: 15px;
+        }
+
+        form label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin: 20px 0 8px;
+            color: #333;
+        }
+
+        form input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        form input[type="text"]:focus {
+            outline: none;
+            border-color: var(--color-purple-dark);
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            .nav-desktop {
+                display: none;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .gallery-item {
+                width: 100%;
+            }
+            
+            .footer-content-grid {
+                flex-direction: column;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .floating-stormy {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cta-buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-buttons a {
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== LOADING SCREEN ==================== -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner">☀️</div>
+            <h2 style="margin-top: 20px;">Loading Stormy...</h2>
+        </div>
+    </div>
+
+    <!-- ==================== PROGRESS BAR ==================== -->
+    <div class="progress-bar" id="progress-bar"></div>
+
+    <!-- ==================== PARTICLES BACKGROUND ==================== -->
+    <div class="particles" id="particles"></div>
+
+    <!-- ==================== BACK TO TOP BUTTON ==================== -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- ==================== ACHIEVEMENT TOAST ==================== -->
+    <div class="achievement-toast" id="achievement-toast">
+        <h4><i class="fa-solid fa-trophy"></i> Achievement Unlocked!</h4>
+        <p id="achievement-text">You've discovered a new character!</p>
+    </div>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <header class="navbar">
+        <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <i class="fa-solid fa-bolt icon-stormy"></i> Stormy
+        </div>
+        <div class="nav-desktop">
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#characters">Characters</a>
+                <a href="#fleet">NASA Fleet</a>
+                <a href="#games">Games</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#teachers">Teachers</a>
+            </nav>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- ==================== MOBILE MENU ==================== -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#home">Home</a>
+        <a href="#characters">Characters</a>
+        <a href="#fleet">NASA Fleet</a>
+        <a href="#games">Games</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#teachers">Teachers</a>
+    </div>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section id="home" class="hero-section">
+        <div class="floating-stormy">☀️</div>
+        <div class="hero-content">
+            <h1>🌞 Stormy the Solar Storm</h1>
+            <p class="subtitle">A playful way to learn about solar storms and their impact on Earth</p>
+            <div class="cta-buttons">
+                <a href="#storybook" class="btn btn-orange"><i class="fa-solid fa-book"></i> Read the Storybook</a>
+                <a href="#characters" class="btn btn-purple"><i class="fa-solid fa-users"></i> Explore Characters</a>
+                <a href="#teachers" class="btn btn-purple"><i class="fa-solid fa-chalkboard-user"></i> For Teachers</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CHARACTERS SECTION ==================== -->
+    <section id="characters" class="section-padded">
+        <h2 class="section-title purple-text">Meet the Characters</h2>
+        <p class="section-tagline">Click on any character to learn their story and discover science facts!</p>
+
+        <div class="fun-fact-banner" onclick="showRandomFact()">
+            <h4><i class="fa-solid fa-lightbulb"></i> Did You Know?</h4>
+            <p id="fun-fact-text">Click to learn a fun space weather fact!</p>
+        </div>
+
+        <div class="character-grid">
+            <div class="character-card" data-character="stormy">
+                <div class="character-icon" style="background: linear-gradient(135deg, #FF6B6B 0%, #FFE66D 100%);">☀️</div>
+                <h3>Stormy the Solar Storm</h3>
+                <p>Click to read the story →</p>
+            </div>
+            <div class="character-card" data-character="parker">
+                <div class="character-icon" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);">🛸</div>
+                <h3>Parker the Solar Probe</h3>
+                <p>Click to read the story →</p>
+            </div>
+            <div class="character-card" data-character="lila">
+                <div class="character-icon" style="background: linear-gradient(135deg, #A8E6CF 0%, #88D8B0 100%);">🚜</div>
+                <h3>Farmer Lila</h3>
+                <p>Click to read the story →</p>
+            </div>
+            <div class="character-card" data-character="vega">
+                <div class="character-icon" style="background: linear-gradient(135deg, #FFA8A8 0%, #FCBAD3 100%);">✈️</div>
+                <h3>Pilot Vega</h3>
+                <p>Click to read the story →</p>
+            </div>
+            <div class="character-card" data-character="kai">
+                <div class="character-icon" style="background: linear-gradient(135deg, #A0C4FF 0%, #BDB2FF 100%);">🧑‍🚀</div>
+                <h3>Astronaut Kai</h3>
+                <p>Click to read the story →</p>
+            </div>
+            <div class="character-card" data-character="nora">
+                <div class="character-icon" style="background: linear-gradient(135deg, #CAFFBF 0%, #9BF6FF 100%);">📡</div>
+                <h3>Nora the Forecaster</h3>
+                <p>Click to read the story →</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== NASA FLEET SECTION ==================== -->
+    <section id="fleet" class="section-padded blue-background">
+        <h2 class="section-title white-text">NASA Fleet Explorer</h2>
+        <p class="section-tagline white-text">Watch satellites orbit and learn about space weather monitoring</p>
+
+        <div class="fleet-map-container">
+            <div class="sun-center"></div>
+            <div class="satellite-marker" style="top: 50%; left: 50%;">
+                🛰️
+                <div class="satellite-tooltip">Parker Solar Probe</div>
+            </div>
+            <div class="satellite-marker" style="top: 50%; left: 50%;">
+                🛰️
+                <div class="satellite-tooltip">SOHO</div>
+            </div>
+            <div class="satellite-marker" style="top: 50%; left: 50%;">
+                🛰️
+                <div class="satellite-tooltip">SDO</div>
+            </div>
+            <div class="satellite-marker" style="top: 50%; left: 50%;">
+                🛰️
+                <div class="satellite-tooltip">DSCOVR</div>
+            </div>
+        </div>
+
+        <div class="fleet-info-grid">
+            <div class="info-card">
+                <h3>Parker Solar Probe</h3>
+                <p>Studies the Sun up close, traveling through its corona to understand solar wind and coronal mass ejections (CMEs).</p>
+            </div>
+            <div class="info-card">
+                <h3>SOHO</h3>
+                <p>Watches the Sun continuously from the L1 point, detecting solar storms before they reach Earth.</p>
+            </div>
+            <div class="info-card">
+                <h3>SDO</h3>
+                <p>Solar Dynamics Observatory captures high-resolution images of the Sun in multiple wavelengths every few seconds.</p>
+            </div>
+            <div class="info-card">
+                <h3>DSCOVR</h3>
+                <p>Provides early warning of incoming solar storms from its position at the L1 Lagrange point.</p>
+            </div>
+        </div>
+
+        <!-- ==================== LIVE DATA WIDGET ==================== -->
+        <div class="live-data-widget">
+            <h3><i class="fa-solid fa-satellite-dish"></i> Space Weather Status (Simulated)</h3>
+            <div class="data-grid">
+                <div class="data-item">
+                    <h4>Solar Activity</h4>
+                    <div class="data-value" id="solar-activity">Low</div>
+                    <span class="data-status status-calm">Calm</span>
+                </div>
+                <div class="data-item">
+                    <h4>Solar Wind Speed</h4>
+                    <div class="data-value" id="solar-wind">342 km/s</div>
+                    <span class="data-status status-calm">Normal</span>
+                </div>
+                <div class="data-item">
+                    <h4>Geomagnetic Field</h4>
+                    <div class="data-value" id="geo-field">Quiet</div>
+                    <span class="data-status status-calm">Stable</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== GAMES SECTION ==================== -->
+    <section id="games" class="section-padded light-background">
+        <h2 class="section-title dark-text">Interactive Mini-Games</h2>
+        <p class="section-tagline dark-text">Play games to learn about solar storm impacts!</p>
+
+        <div class="game-card-grid">
+            <div class="game-card">
+                <div class="game-card-icon" style="background: linear-gradient(135deg, #FFD93D 0%, #6BCF7F 100%);">🛰️</div>
+                <h3>GPS Rescue</h3>
+                <p>Help Farmer Lila fix her tractor's GPS during a solar storm! Catch the good signals and avoid interference.</p>
+                <div class="high-score">🏆 High Score: <span id="gps-high-score">0</span></div>
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" data-game="gps" data-level="easy">Easy</button>
+                    <button class="difficulty-btn" data-game="gps" data-level="medium">Medium</button>
+                    <button class="difficulty-btn" data-game="gps" data-level="hard">Hard</button>
+                </div>
+                <button class="btn btn-green" onclick="startGame('gps')"><i class="fa-solid fa-play"></i> Play Now</button>
+            </div>
+            <div class="game-card">
+                <div class="game-card-icon" style="background: linear-gradient(135deg, #FF6B9D 0%, #C06C84 100%);">📻</div>
+                <h3>Radio Tune-Up</h3>
+                <p>Clear the static from Pilot Vega's radio to communicate safely. Match frequencies to restore signal!</p>
+                <div class="high-score">🏆 High Score: <span id="radio-high-score">0</span></div>
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" data-game="radio" data-level="easy">Easy</button>
+                    <button class="difficulty-btn" data-game="radio" data-level="medium">Medium</button>
+                    <button class="difficulty-btn" data-game="radio" data-level="hard">Hard</button>
+                </div>
+                <button class="btn btn-blue" onclick="startGame('radio')"><i class="fa-solid fa-play"></i> Play Now</button>
+            </div>
+            <div class="game-card">
+                <div class="game-card-icon" style="background: linear-gradient(135deg, #A8DADC 0%, #457B9D 100%);">🛡️</div>
+                <h3>Shield Defense</h3>
+                <p>Protect Astronaut Kai from solar radiation with magnetic shields! Block the particles and stay safe.</p>
+                <div class="high-score">🏆 High Score: <span id="shield-high-score">0</span></div>
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" data-game="shield" data-level="easy">Easy</button>
+                    <button class="difficulty-btn" data-game="shield" data-level="medium">Medium</button>
+                    <button class="difficulty-btn" data-game="shield" data-level="hard">Hard</button>
+                </div>
+                <button class="btn btn-purple" onclick="startGame('shield')"><i class="fa-solid fa-play"></i> Play Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== GALLERY SECTION ==================== -->
+    <section id="gallery" class="section-padded purple-background">
+        <h2 class="section-title white-text">Aurora Gallery</h2>
+        <p class="section-tagline white-text">Cartoon illustrations meet real NASA photography</p>
+
+        <div class="gallery-comparison">
+            <div class="gallery-item">
+                <p>🎨 Cartoon Aurora</p>
+                <img src="aurora-cartoon.jpg" class="gallery-item-image" alt="Cartoon Aurora">
+                
+            </div>
+            <div class="gallery-item">
+                <p>📸 Real Aurora</p>
+		<!-- IMAGE: Replace the gradient with your real aurora NASA photo -->
+                <img src="aurora-real.jpg" class="gallery-item-image" alt="Real Aurora"> 
+            </div>
+        </div>
+
+        <button id="upload-btn" class="btn btn-pink-upload"><i class="fa-solid fa-upload"></i> Upload Your Aurora Drawing</button>
+        
+        <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text=Check%20out%20Stormy%20the%20Solar%20Storm!%20%23SpaceApps2025%20%23SpaceWeather" target="_blank" class="share-btn twitter" title="Share on Twitter">
+                <i class="fa-brands fa-twitter"></i>
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank" class="share-btn facebook" title="Share on Facebook">
+                <i class="fa-brands fa-facebook"></i>
+            </a>
+            <a href="https://pinterest.com/pin/create/button/" target="_blank" class="share-btn pinterest" title="Share on Pinterest">
+                <i class="fa-brands fa-pinterest"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- ==================== STORYBOOK SECTION ==================== -->
+    <section id="storybook" class="section-padded" style="background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);">
+        <h2 class="section-title" style="color: #E65100;">📖 The Storybook</h2>
+        <p class="section-tagline dark-text">Download the complete Stormy adventure story</p>
+        
+        <div style="max-width: 800px; margin: 40px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <i class="fa-solid fa-book-open" style="font-size: 5rem; color: #7B1FA2; margin-bottom: 20px;"></i>
+                <h3 style="font-size: 2rem; color: #333; margin-bottom: 15px;">Stormy's Solar Adventure</h3>
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">
+                    Join Stormy on an incredible journey from the Sun to Earth! This beautifully illustrated storybook teaches children about solar storms, space weather, and how scientists monitor our Sun. Perfect for ages 6-12.
+                </p>
+            </div>
+            <div style="text-align: center;">
+                <a href="Story_Book_Digital.pdf" target="_blank" class="btn btn-orange" download style="font-size: 1.2rem; padding: 15px 35px;">
+                    <i class="fa-solid fa-download"></i> Download Full Storybook (PDF)
+                </a>
+                <p style="margin-top: 15px; color: #999; font-size: 0.9rem;">PDF is available</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TEACHERS SECTION ==================== -->
+    <section id="teachers" class="section-padded light-brown-background">
+        <h2 class="section-title brown-text">For Teachers</h2>
+        <p class="section-tagline dark-text">Free educational resources to bring space weather into your classroom</p>
+        
+        <div class="teachers-image-container">
+            <img src="teacher-classroom.jpg" alt="Classroom Learning"> 
+        </div>
+
+        <div class="resource-download-grid">
+            <div class="download-card">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h3>Lesson Plans</h3>
+                <p>Complete curriculum for teaching space weather concepts aligned with science standards</p>
+                <!-- TEACHER RESOURCE: Replace # with your PDF file path -->
+                <a href="Stormy_Lesson_Plan.pdf" target="_blank" class="btn btn-orange" download style="font-size: 1rem; padding: 16px 40px; display: inline-flex; align-items: center; gap: 12px; border-			radius: 50px; min-width: 200px; justify-content: center;">
+    			<i class="fa-solid fa-download" style="font-size: 1.2rem;"></i> 
+    			<span style="font-weight: 600;">Download PDF</span>
+		</a>
+            </div>
+
+            <div class="download-card">
+                <i class="fa-solid fa-palette"></i>
+                <h3>Coloring Sheets</h3>
+                <p>Printable character and space scenes for creative learning activities</p>
+                <!-- TEACHER RESOURCE: Replace # with your PDF file path -->
+                <a href="Coloring_Book.pdf" target="_blank" class="btn btn-orange" download style="font-size: 1rem; padding: 16px 40px; display: inline-flex; align-items: center; gap: 12px; border-			radius: 50px; min-width: 200px; justify-content: center;">
+    			<i class="fa-solid fa-download" style="font-size: 1.2rem;"></i> 
+    			<span style="font-weight: 600;">Download PDF</span>
+		</a>
+            </div>
+
+            <div class="download-card">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <h3>Assessment Tools</h3>
+                <p>Quizzes and worksheets to measure student understanding</p>
+                <!-- TEACHER RESOURCE: Replace # with your PDF file path -->
+                <a href="Stormy_Assessment_Tools.pdf" target="_blank" class="btn btn-orange" download style="font-size: 1rem; padding: 16px 40px; display: inline-flex; align-items: center; gap: 12px; border-			radius: 50px; min-width: 200px; justify-content: center;">
+    			<i class="fa-solid fa-download" style="font-size: 1.2rem;"></i> 
+    			<span style="font-weight: 600;">Download PDF</span>
+		</a>
+            </div>
+        </div>
+
+        <div class="external-resources-box">
+            <h3 class="external-resources-title">External Resources</h3>
+            <div class="external-resources-grid">
+                <a href="https://www.nasa.gov/stem" target="_blank" class="resource-link-card">
+                    <i class="fa-solid fa-rocket"></i> NASA STEM Resources
+                </a>
+                <a href="https://www.noaa.gov/space-weather" target="_blank" class="resource-link-card">
+                    <i class="fa-solid fa-satellite-dish"></i> NOAA Space Weather
+                </a>
+                <a href="https://www.swpc.noaa.gov/content/education-and-outreach" target="_blank" class="resource-link-card">
+                    <i class="fa-solid fa-graduation-cap"></i> Space Weather Education
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer-section">
+        <div class="footer-content-grid">
+            <div class="footer-column">
+                <h4>About Stormy</h4>
+                <p>An interactive educational platform teaching kids about solar storms and space weather through engaging stories, games, and activities. Making complex science accessible and fun for young learners worldwide.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Our Partners</h4>
+                <div class="footer-logos">
+                    <!-- LOGO: Replace placeholder images with your actual NASA and NOAA logos -->
+                    <!-- Example: <img src="nasa-logo.jpg" alt="NASA Logo"> -->
+                    <!-- Example: <img src="noaa-logo.jpg" alt="NOAA Logo"> -->
+                    <img src="nasa-logo.jpg" alt="NASA Logo">
+                    <img src="noaa-logo.jpg" alt="NOAA Logo">
+                </div>
+                <p style="margin-top: 15px;">Working together to advance space weather education</p>
+            </div>
+            <div class="footer-column">
+                <h4>Connect With Us</h4>
+                <p>
+                    <a href="https://twitter.com/hashtag/SpaceApps2025" target="_blank" class="social-link">
+                        <i class="fa-brands fa-twitter"></i> #SpaceApps2025
+                    </a><br>
+                    <a href="https://twitter.com/hashtag/SpaceWeather" target="_blank" class="social-link">
+                        <i class="fa-brands fa-twitter"></i> #SpaceWeather
+                    </a><br>
+                    <a href="https://twitter.com/hashtag/STEMEducation" target="_blank" class="social-link">
+                        <i class="fa-brands fa-twitter"></i> #STEMEducation
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-credits-bar">
+            <p style="margin-bottom: 8px;"><strong>Created for NASA Space Apps Challenge 2025 by Team Stormy</strong></p>
+            <p>&copy; 2025 Stormy the Solar Storm. All rights reserved. | Educational use encouraged</p>
+        </div>
+    </footer>
+
+    <!-- ==================== CHARACTER MODALS ==================== -->
+    <div id="modal-stormy" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="character-modal-header">
+                <div class="character-icon" style="background: linear-gradient(135deg, #FF6B6B 0%, #FFE66D 100%);">☀️</div>
+                <h2>Stormy the Solar Storm</h2>
+            </div>
+            <div class="story-box">
+                <h4><i class="fa-solid fa-book"></i> Story</h4>
+                <p>Stormy is a cheerful and energetic solar storm who lives on the Sun! Born from a massive explosion called a Coronal Mass Ejection (CME), Stormy loves to zoom through space on solar winds. While Stormy means no harm, their powerful energy can cause some mischief on Earth - making GPS systems confused, creating beautiful auroras in the sky, and sometimes disrupting power grids. Stormy is learning that even though they're just being themselves, their friends on Earth need advance warning before each visit!</p>
+            </div>
+            <div class="fact-box">
+                <h4><i class="fa-solid fa-flask"></i> Science Fact</h4>
+                <p>Solar storms are real events caused by eruptions on the Sun's surface! When the Sun releases huge clouds of charged particles, they travel at speeds of up to 5 million miles per hour. When they reach Earth (usually in 1-3 days), they interact with our magnetic field, creating beautiful auroras and sometimes affecting satellites and power systems.</p>
+            </div>
+            <div class="quiz-section">
+                <h4><i class="fa-solid fa-question-circle"></i> Quick Quiz</h4>
+                <p style="margin-bottom: 15px;"><strong>How fast can solar storm particles travel?</strong></p>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A) 100,000 mph</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B) 5 million mph</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C) 10,000 mph</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-parker" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="character-modal-header">
+                <div class="character-icon" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);">🛸</div>
+                <h2>Parker the Solar Probe</h2>
+            </div>
+            <div class="story-box">
+                <h4><i class="fa-solid fa-book"></i> Story</h4>
+                <p>Parker is the bravest spacecraft in the solar system! Flying closer to the Sun than any probe before, Parker can withstand temperatures over 2,500°F thanks to a special heat shield. Parker's mission is to study the Sun up close and send data back to Earth, helping scientists predict when Stormy might visit. Parker and Stormy are actually good friends - Parker warns Earth about Stormy's upcoming visits so everyone can prepare!</p>
+            </div>
+            <div class="fact-box">
+                <h4><i class="fa-solid fa-flask"></i> Science Fact</h4>
+                <p>NASA's Parker Solar Probe is the fastest human-made object ever, traveling at speeds up to 430,000 mph! It's gathering data to help us understand solar wind and space weather. The probe will eventually come within 3.9 million miles of the Sun's surface!</p>
+            </div>
+            <div class="quiz-section">
+                <h4><i class="fa-solid fa-question-circle"></i> Quick Quiz</h4>
+                <p style="margin-bottom: 15px;"><strong>What protects Parker from the Sun's heat?</strong></p>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A) A cooling fan</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B) A special heat shield</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C) Ice armor</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-lila" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="character-modal-header">
+                <div class="character-icon" style="background: linear-gradient(135deg, #A8E6CF 0%, #88D8B0 100%);">🚜</div>
+                <h2>Farmer Lila</h2>
+            </div>
+            <div class="story-box">
+                <h4><i class="fa-solid fa-book"></i> Story</h4>
+                <p>Farmer Lila grows the best vegetables in the county using high-tech farming equipment! Her tractor uses GPS satellites to plant seeds in perfectly straight rows. But when Stormy visits, the GPS signals get scrambled, and her tractor starts driving in circles! Lila has learned to check space weather forecasts before planting season. She's become an expert at knowing when Stormy might arrive and plans her farming schedule accordingly.</p>
+            </div>
+            <div class="fact-box">
+                <h4><i class="fa-solid fa-flask"></i> Science Fact</h4>
+                <p>Solar storms can disrupt GPS signals because they affect the ionosphere - a layer of Earth's atmosphere that GPS signals pass through. Modern precision agriculture relies heavily on GPS, so space weather forecasts are important for farmers!</p>
+            </div>
+            <div class="quiz-section">
+                <h4><i class="fa-solid fa-question-circle"></i> Quick Quiz</h4>
+                <p style="margin-bottom: 15px;"><strong>How do solar storms affect GPS?</strong></p>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A) They break the satellites</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B) They disrupt signals through the ionosphere</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C) They don't affect GPS at all</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-vega" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="character-modal-header">
+                <div class="character-icon" style="background: linear-gradient(135deg, #FFA8A8 0%, #FCBAD3 100%);">✈️</div>
+                <h2>Pilot Vega</h2>
+            </div>
+            <div class="story-box">
+                <h4><i class="fa-solid fa-book"></i> Story</h4>
+                <p>Pilot Vega flies passengers safely across the world! She communicates with air traffic control using radio signals that bounce off the ionosphere. When Stormy visits, these radio signals get static and sometimes disappear completely. Vega has to fly at different altitudes and use backup communication systems. She always checks space weather reports before long flights over the poles, where Stormy's effects are strongest!</p>
+            </div>
+            <div class="fact-box">
+                <h4><i class="fa-solid fa-flask"></i> Science Fact</h4>
+                <p>Airlines actually reroute flights during major solar storms! Polar routes are especially affected because that's where charged particles from solar storms enter Earth's atmosphere. Pilots receive space weather briefings just like regular weather reports.</p>
+            </div>
+            <div class="quiz-section">
+                <h4><i class="fa-solid fa-question-circle"></i> Quick Quiz</h4>
+                <p style="margin-bottom: 15px;"><strong>Where are solar storm effects strongest on Earth?</strong></p>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A) At the equator</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B) At the poles</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C) In the deserts</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-kai" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="character-modal-header">
+                <div class="character-icon" style="background: linear-gradient(135deg, #A0C4FF 0%, #BDB2FF 100%);">🧑‍🚀</div>
+                <h2>Astronaut Kai</h2>
+            </div>
+            <div class="story-box">
+                <h4><i class="fa-solid fa-book"></i> Story</h4>
+                <p>Astronaut Kai lives and works aboard the International Space Station! Up in space, Kai is outside Earth's protective magnetic field bubble, so Stormy's visits can be dangerous. When solar storms are predicted, Kai and the crew move to specially shielded areas of the station and postpone spacewalks. Kai studies space weather as part of their research, helping make future space missions safer for everyone!</p>
+            </div>
+            <div class="fact-box">
+                <h4><i class="fa-solid fa-flask"></i> Science Fact</h4>
+                <p>Astronauts on the International Space Station receive higher radiation doses during solar storms. The ISS has a specially shielded area where astronauts can take shelter. Future missions to Mars will need advanced warning systems and better protection from solar radiation!</p>
+            </div>
+            <div class="quiz-section">
+                <h4><i class="fa-solid fa-question-circle"></i> Quick Quiz</h4>
+                <p style="margin-bottom: 15px;"><strong>What protects astronauts during solar storms?</strong></p>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A) Their spacesuits only</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B) Specially shielded areas of the ISS</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C) Nothing can protect them</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-nora" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="character-modal-header">
+                <div class="character-icon" style="background: linear-gradient(135deg, #CAFFBF 0%, #9BF6FF 100%);">📡</div>
+                <h2>Nora the Forecaster</h2>
+            </div>
+            <div class="story-box">
+                <h4><i class="fa-solid fa-book"></i> Story</h4>
+                <p>Nora is a space weather forecaster at NOAA's Space Weather Prediction Center! She watches data from satellites like Parker, SOHO, and DSCOVR to predict when Stormy will visit Earth. When Nora sees a big solar storm coming, she sends alerts to power companies, airlines, farmers, and astronauts so they can prepare. Nora's favorite part of the job is knowing that her forecasts help keep people safe while also creating beautiful auroras for everyone to enjoy!</p>
+            </div>
+            <div class="fact-box">
+                <h4><i class="fa-solid fa-flask"></i> Science Fact</h4>
+                <p>Space weather forecasters work 24/7 monitoring the Sun! They use data from multiple satellites and ground-based observatories to predict solar storms 1-3 days before they reach Earth. This early warning system helps protect satellites, power grids, and astronauts from harmful radiation.</p>
+            </div>
+            <div class="quiz-section">
+                <h4><i class="fa-solid fa-question-circle"></i> Quick Quiz</h4>
+                <p style="margin-bottom: 15px;"><strong>How much advance warning can forecasters give for solar storms?</strong></p>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A) A few minutes</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B) 1-3 days</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C) Several weeks</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== UPLOAD MODAL ==================== -->
+    <div id="modal-upload" class="modal">
+        <div class="modal-content small-modal">
+            <span class="close-btn">&times;</span>
+            <h3 style="color: var(--color-purple-dark); margin-bottom: 10px;"><i class="fa-solid fa-palette"></i> Upload Your Aurora Drawing</h3>
+            <p style="margin-bottom: 25px; color: #666;">Share your beautiful aurora artwork with the community! We'd love to see your creativity.</p>
+            <form onsubmit="event.preventDefault(); handleUpload();">
+                <label for="artist-name">Your Name (Artist)</label>
+                <input type="text" id="artist-name" placeholder="Enter your name" required>
+
+                <label>Your Artwork</label>
+                <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                    <i class="fa-regular fa-image"></i>
+                    <p style="margin: 10px 0; font-weight: bold;">Click to select your drawing</p>
+                    <p style="font-size: 0.9rem; color: #999;">PNG, JPG up to 10MB</p>
+                    <input type="file" id="file-input" accept=".png,.jpg,.jpeg" style="display: none;" required>
+                </div>
+                
+                <button type="submit" class="btn btn-pink-upload" style="width: 100%; margin-top: 20px; font-size: 1.1rem;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Submit Your Artwork
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== GAME MODAL ==================== -->
+    <div id="modal-game" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close-btn">&times;</span>
+            <div id="game-content"></div>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ==================== INITIALIZE VARIABLES ====================
+        let highScores = {
+            gps: 0,
+            radio: 0,
+            shield: 0
+        };
+        let gameDifficulty = {
+            gps: 'easy',
+            radio: 'easy',
+            shield: 'easy'
+        };
+        let charactersRead = new Set();
+        let gameInterval;
+        let gameScore = 0;
+        let gameActive = true;
+        let gameTime = 0;
+        let gameTimerInterval;
+
+        const funFacts = [
+            "The Sun releases more energy in one second than humanity has used in its entire history!",
+            "Solar storms can create auroras as far south as Florida and Texas during major events!",
+            "The Parker Solar Probe will get 7 times closer to the Sun than any previous spacecraft!",
+            "A single solar storm can release the energy equivalent to millions of nuclear bombs!",
+            "Astronauts can see flashes of light when cosmic rays pass through their eyeballs!",
+            "The fastest solar storm ever recorded reached Earth in just 14.6 hours!",
+            "Solar storms can cause power outages affecting millions of people!",
+            "The beautiful green color in auroras comes from oxygen molecules 60-150 miles up!",
+            "Mars lacks a magnetic field, so solar storms hit its surface directly!",
+            "In 1859, a solar storm was so powerful that telegraph wires sparked and started fires!"
+        ];
+
+        // ==================== LOADING SCREEN ====================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // ==================== CREATE PARTICLES ====================
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // ==================== SCROLL PROGRESS BAR ====================
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + '%';
+
+            // Show back to top button
+            const backToTop = document.getElementById('back-to-top');
+            if (winScroll > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+
+        // ==================== BACK TO TOP ====================
+        document.getElementById('back-to-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ==================== HAMBURGER MENU ====================
+        document.getElementById('hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('mobile-menu').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('hamburger').classList.remove('active');
+                document.getElementById('mobile-menu').classList.remove('active');
+            });
+        });
+
+        // ==================== SMOOTH SCROLLING ====================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ==================== FUN FACTS ====================
+        function showRandomFact() {
+            const fact = funFacts[Math.floor(Math.random() * funFacts.length)];
+            document.getElementById('fun-fact-text').textContent = fact;
+        }
+
+        // ==================== ACHIEVEMENT SYSTEM ====================
+        function showAchievement(text) {
+            const toast = document.getElementById('achievement-toast');
+            document.getElementById('achievement-text').textContent = text;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ==================== CHARACTER MODALS ====================
+        const characterCards = document.querySelectorAll('.character-card');
+        characterCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const character = card.dataset.character;
+                const modal = document.getElementById(`modal-${character}`);
+                if (modal) {
+                    modal.style.display = 'flex';
+                    
+                    if (!charactersRead.has(character)) {
+                        charactersRead.add(character);
+                        showAchievement(`You discovered ${character.charAt(0).toUpperCase() + character.slice(1)}!`);
+                    }
+                }
+            });
+        });
+
+        // ==================== UPLOAD MODAL ====================
+        document.getElementById('upload-btn').addEventListener('click', () => {
+            document.getElementById('modal-upload').style.display = 'flex';
+        });
+
+        // ==================== CLOSE MODALS ====================
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.closest('.modal').style.display = 'none';
+                if (btn.closest('#modal-game')) {
+                    clearInterval(gameInterval);
+                    clearInterval(gameTimerInterval);
+                    gameActive = false;
+                }
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    if (modal.id === 'modal-game') {
+                        clearInterval(gameInterval);
+                        clearInterval(gameTimerInterval);
+                        gameActive = false;
+                    }
+                }
+            });
+        });
+
+        // ==================== QUIZ ANSWERS ====================
+        function checkAnswer(element, isCorrect) {
+            if (element.classList.contains('correct') || element.classList.contains('incorrect')) {
+                return;
+            }
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.innerHTML += ' ✓';
+                showAchievement('Correct! You earned 10 science points!');
+            } else {
+                element.classList.add('incorrect');
+                element.innerHTML += ' ✗';
+            }
+        }
+
+        // ==================== FILE UPLOAD ====================
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const uploadArea = document.querySelector('#modal-upload .upload-area');
+                uploadArea.innerHTML = `
+                    <i class="fa-solid fa-check-circle" style="color: #4CAF50; font-size: 3rem; margin-bottom: 15px;"></i>
+                    <p style="font-weight: bold; color: #4CAF50;">File selected: ${file.name}</p>
+                    <p style="font-size: 0.9rem; color: #999;">Click to change</p>
+                `;
+            }
+        });
+
+        function handleUpload() {
+            showAchievement('Thank you for sharing your artwork!');
+            document.getElementById('modal-upload').style.display = 'none';
+            document.getElementById('artist-name').value = '';
+            document.getElementById('file-input').value = '';
+            const uploadArea = document.querySelector('#modal-upload .upload-area');
+            uploadArea.innerHTML = `
+                <i class="fa-regular fa-image"></i>
+                <p style="margin: 10px 0; font-weight: bold;">Click to select your drawing</p>
+                <p style="font-size: 0.9rem; color: #999;">PNG, JPG up to 10MB</p>
+            `;
+        }
+
+        // ==================== DIFFICULTY SELECTOR ====================
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const game = this.dataset.game;
+                const level = this.dataset.level;
+                gameDifficulty[game] = level;
+                
+                this.parentElement.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // ==================== GAME FUNCTIONS ====================
+        function startGame(gameType) {
+            const gameModal = document.getElementById('modal-game');
+            const gameContent = document.getElementById('game-content');
+            const difficulty = gameDifficulty[gameType];
+            
+            const games = {
+                gps: {
+                    title: '🛰️ GPS Rescue',
+                    description: 'Catch the good signals (📶) and avoid interference (⚠️)! Click to move the tractor.',
+                    color: '#26C6DA'
+                },
+                radio: {
+                    title: '📻 Radio Tune-Up',
+                    description: 'Match the frequency bars by clicking when they align! Get matches to win.',
+                    color: '#42A5F5'
+                },
+                shield: {
+                    title: '🛡️ Shield Defense',
+                    description: 'Move your shield to block solar particles! Use mouse or touch.',
+                    color: '#7B1FA2'
+                }
+            };
+
+            const game = games[gameType];
+            gameContent.innerHTML = `
+                <h2 style="color: ${game.color}; margin-bottom: 15px;">${game.title}</h2>
+                <p style="margin-bottom: 10px; font-size: 1.1rem;">${game.description}</p>
+                <p style="margin-bottom: 25px; color: #666; font-weight: bold;">Difficulty: ${difficulty.toUpperCase()}</p>
+                <div class="game-container">
+                    <div class="game-score">Score: <span id="score">0</span></div>
+                    <div class="game-timer">Time: <span id="timer">0</span>s</div>
+                    <div class="game-canvas" id="game-canvas"></div>
+                    <div class="game-controls">
+                        <button class="btn btn-green" onclick="resetGame('${gameType}')">
+                            <i class="fa-solid fa-rotate-right"></i> Restart
+                        </button>
+                        <button class="btn btn-orange" onclick="document.getElementById('modal-game').style.display='none'; clearInterval(gameInterval); clearInterval(gameTimerInterval); gameActive=false;">
+                            <i class="fa-solid fa-xmark"></i> Close
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            gameModal.style.display = 'flex';
+            initializeGame(gameType, difficulty);
+        }
+
+        function initializeGame(type, difficulty) {
+            clearInterval(gameInterval);
+            clearInterval(gameTimerInterval);
+            gameScore = 0;
+            gameTime = 0;
+            gameActive = true;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('timer').textContent = '0';
+            const canvas = document.getElementById('game-canvas');
+            canvas.innerHTML = '';
+
+            gameTimerInterval = setInterval(() => {
+                if (gameActive) {
+                    gameTime++;
+                    document.getElementById('timer').textContent = gameTime;
+                }
+            }, 1000);
+
+            if (type === 'gps') {
+                startGPSGame(canvas, difficulty);
+            } else if (type === 'radio') {
+                startRadioGame(canvas, difficulty);
+            } else if (type === 'shield') {
+                startShieldGame(canvas, difficulty);
+            }
+        }
+
+        function startGPSGame(canvas, difficulty) {
+            let playerX = canvas.offsetWidth / 2;
+            const player = document.createElement('div');
+            player.className = 'game-object';
+            player.innerHTML = '🚜';
+            player.style.fontSize = '40px';
+            player.style.bottom = '20px';
+            player.style.left = playerX + 'px';
+            canvas.appendChild(player);
+
+            const speeds = { easy: 2, medium: 3, hard: 4 };
+            const intervals = { easy: 1800, medium: 1400, hard: 1000 };
+            const speed = speeds[difficulty];
+            const interval = intervals[difficulty];
+
+            gameInterval = setInterval(() => {
+                if (!gameActive) return;
+                
+                const signal = document.createElement('div');
+                signal.className = 'game-object';
+                const isGood = Math.random() > 0.35;
+                signal.innerHTML = isGood ? '📶' : '⚠️';
+                signal.style.fontSize = '30px';
+                signal.style.top = '0px';
+                signal.style.left = Math.random() * (canvas.offsetWidth - 40) + 'px';
+                signal.dataset.good = isGood;
+                canvas.appendChild(signal);
+
+                const fallInterval = setInterval(() => {
+                    const top = parseInt(signal.style.top);
+                    if (top > canvas.offsetHeight) {
+                        signal.remove();
+                        clearInterval(fallInterval);
+                    } else {
+                        signal.style.top = (top + speed) + 'px';
+                        
+                        const signalX = parseInt(signal.style.left);
+                        if (Math.abs(signalX - playerX) < 50 && top > canvas.offsetHeight - 80) {
+                            if (signal.dataset.good === 'true') {
+                                gameScore += 10;
+                                updateScore('gps');
+                            } else {
+                                gameScore = Math.max(0, gameScore - 5);
+                                updateScore('gps');
+                            }
+                            signal.remove();
+                            clearInterval(fallInterval);
+                        }
+                    }
+                }, 30);
+            }, interval);
+
+            canvas.addEventListener('click', (e) => {
+                playerX = e.offsetX;
+                player.style.left = playerX + 'px';
+            });
+        }
+
+        function startRadioGame(canvas, difficulty) {
+            canvas.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%; flex-direction: column;"></div>';
+            const container = canvas.firstChild;
+            
+            const ranges = { easy: [100, 250], medium: [80, 280], hard: [60, 300] };
+            const range = ranges[difficulty];
+            let targetHeight = Math.random() * (range[1] - range[0]) + range[0];
+            let currentHeight = 50;
+            let direction = 1;
+
+            const target = document.createElement('div');
+            target.style.width = '100px';
+            target.style.height = targetHeight + 'px';
+            target.style.background = 'linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%)';
+            target.style.margin = '10px';
+            target.style.borderRadius = '10px';
+            target.style.opacity = '0.5';
+            container.appendChild(target);
+
+            const current = document.createElement('div');
+            current.style.width = '100px';
+            current.style.height = currentHeight + 'px';
+            current.style.background = 'linear-gradient(90deg, #2196F3 0%, #03A9F4 100%)';
+            current.style.margin = '10px';
+            current.style.borderRadius = '10px';
+            current.style.transition = 'height 0.05s linear';
+            container.appendChild(current);
+
+            const button = document.createElement('button');
+            button.className = 'btn btn-blue';
+            button.innerHTML = '<i class="fa-solid fa-check"></i> Match!';
+            button.style.marginTop = '20px';
+            container.appendChild(button);
+
+            const speeds = { easy: 2, medium: 3, hard: 4 };
+            const changeSpeed = speeds[difficulty];
+
+            gameInterval = setInterval(() => {
+                currentHeight += direction * changeSpeed;
+                if (currentHeight >= range[1] || currentHeight <= 50) direction *= -1;
+                current.style.height = currentHeight + 'px';
+            }, 50);
+
+            button.addEventListener('click', () => {
+                const diff = Math.abs(currentHeight - targetHeight);
+                const tolerances = { easy: 25, medium: 18, hard: 12 };
+                const tolerance = tolerances[difficulty];
+                
+                if (diff < tolerance) {
+                    gameScore += 10;
+                    targetHeight = Math.random() * (range[1] - range[0]) + range[0];
+                    target.style.height = targetHeight + 'px';
+                    updateScore('radio');
+                } else {
+                    gameScore = Math.max(0, gameScore - 3);
+                    updateScore('radio');
+                }
+            });
+        }
+
+        function startShieldGame(canvas, difficulty) {
+            let shieldX = canvas.offsetWidth / 2;
+            const shield = document.createElement('div');
+            shield.className = 'game-object';
+            shield.innerHTML = '🛡️';
+            shield.style.fontSize = '50px';
+            shield.style.bottom = '20px';
+            shield.style.left = shieldX + 'px';
+            canvas.appendChild(shield);
+
+            const speeds = { easy: 3, medium: 4, hard: 5 };
+            const intervals = { easy: 1400, medium: 1100, hard: 800 };
+            const speed = speeds[difficulty];
+            const interval = intervals[difficulty];
+
+            gameInterval = setInterval(() => {
+                if (!gameActive) return;
+                
+                const particle = document.createElement('div');
+                particle.className = 'game-object';
+                particle.innerHTML = '☄️';
+                particle.style.fontSize = '30px';
+                particle.style.top = '0px';
+                particle.style.left = Math.random() * (canvas.offsetWidth - 40) + 'px';
+                canvas.appendChild(particle);
+
+                const fallInterval = setInterval(() => {
+                    const top = parseInt(particle.style.top);
+                    if (top > canvas.offsetHeight) {
+                        gameScore = Math.max(0, gameScore - 2);
+                        updateScore('shield');
+                        particle.remove();
+                        clearInterval(fallInterval);
+                    } else {
+                        particle.style.top = (top + speed) + 'px';
+                        
+                        const particleX = parseInt(particle.style.left);
+                        if (Math.abs(particleX - shieldX) < 60 && top > canvas.offsetHeight - 90) {
+                            gameScore += 5;
+                            updateScore('shield');
+                            particle.remove();
+                            clearInterval(fallInterval);
+                        }
+                    }
+                }, 30);
+            }, interval);
+
+            canvas.addEventListener('mousemove', (e) => {
+                shieldX = e.offsetX;
+                shield.style.left = shieldX + 'px';
+            });
+
+            canvas.addEventListener('click', (e) => {
+                shieldX = e.offsetX;
+                shield.style.left = shieldX + 'px';
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                shieldX = touch.clientX - rect.left;
+                shield.style.left = shieldX + 'px';
+            });
+        }
+
+        function updateScore(gameType) {
+            document.getElementById('score').textContent = gameScore;
+            if (gameScore > highScores[gameType]) {
+                highScores[gameType] = gameScore;
+                document.getElementById(`${gameType}-high-score`).textContent = gameScore;
+                showAchievement(`New high score in ${gameType.toUpperCase()}! ${gameScore} points!`);
+            }
+        }
+
+        function resetGame(type) {
+            clearInterval(gameInterval);
+            clearInterval(gameTimerInterval);
+            const difficulty = gameDifficulty[type];
+            initializeGame(type, difficulty);
+        }
+
+        // NASA API Configuration
+        const NASA_API_KEY = 'egNHcnfaPluzrFLcuuQOJx3fS72VjDRQ087yaZbO';
+        
+        // Fetch real NASA data
+        async function fetchNASAData() {
+            try {
+                // Fetch DONKI (Space Weather Database) data
+                const today = new Date().toISOString().split('T')[0];
+                const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                
+                // Get Coronal Mass Ejections (CME) data
+                const cmeResponse = await fetch(
+                    `https://api.nasa.gov/DONKI/CME?startDate=${thirtyDaysAgo}&endDate=${today}&api_key=${NASA_API_KEY}`
+                );
+                const cmeData = await cmeResponse.json();
+                
+                // Get Solar Flare data
+                const flareResponse = await fetch(
+                    `https://api.nasa.gov/DONKI/FLR?startDate=${thirtyDaysAgo}&endDate=${today}&api_key=${NASA_API_KEY}`
+                );
+                const flareData = await flareResponse.json();
+                
+                // Get Geomagnetic Storm data
+                const gstResponse = await fetch(
+                    `https://api.nasa.gov/DONKI/GST?startDate=${thirtyDaysAgo}&endDate=${today}&api_key=${NASA_API_KEY}`
+                );
+                const gstData = await gstResponse.json();
+                
+                updateSpaceWeatherFromNASA(cmeData, flareData, gstData);
+                
+            } catch (error) {
+                console.error('Error fetching NASA data:', error);
+                // Fall back to simulated data
+                updateSpaceWeather();
+            }
+        }
+        
+        function updateSpaceWeatherFromNASA(cmeData, flareData, gstData) {
+            // Analyze recent activity
+            const recentCMEs = cmeData.filter(cme => {
+                const cmeDate = new Date(cme.activityID);
+                const daysDiff = (new Date() - cmeDate) / (1000 * 60 * 60 * 24);
+                return daysDiff <= 7;
+            });
+            
+            const recentFlares = flareData.filter(flare => {
+                const flareDate = new Date(flare.beginTime);
+                const daysDiff = (new Date() - flareDate) / (1000 * 60 * 60 * 24);
+                return daysDiff <= 7;
+            });
+            
+            const recentStorms = gstData.filter(storm => {
+                const stormDate = new Date(storm.startTime);
+                const daysDiff = (new Date() - stormDate) / (1000 * 60 * 60 * 24);
+                return daysDiff <= 7;
+            });
+            
+            // Determine solar activity level
+            let activityLevel = 'Low';
+            let activityStatus = 'status-calm';
+            let activityText = 'Calm';
+            
+            if (recentFlares.length > 5 || recentCMEs.length > 3) {
+                activityLevel = 'High';
+                activityStatus = 'status-storm';
+                activityText = 'Warning';
+            } else if (recentFlares.length > 2 || recentCMEs.length > 1) {
+                activityLevel = 'Moderate';
+                activityStatus = 'status-active';
+                activityText = 'Active';
+            }
+            
+            // Determine geomagnetic field status
+            let fieldStatus = 'Quiet';
+            let fieldClass = 'status-calm';
+            let fieldText = 'Stable';
+            
+            if (recentStorms.length > 0) {
+                const latestStorm = recentStorms[0];
+                if (latestStorm.allKpIndex && latestStorm.allKpIndex.length > 0) {
+                    const maxKp = Math.max(...latestStorm.allKpIndex.map(k => k.kpIndex));
+                    if (maxKp >= 5) {
+                        fieldStatus = 'Storm';
+                        fieldClass = 'status-storm';
+                        fieldText = 'Storm';
+                    } else if (maxKp >= 3) {
+                        fieldStatus = 'Active';
+                        fieldClass = 'status-active';
+                        fieldText = 'Active';
+                    }
+                }
+            }
+            
+            // Estimate solar wind speed (simulated based on activity)
+            const baseSpeed = 400;
+            const speedVariation = activityLevel === 'High' ? 150 : activityLevel === 'Moderate' ? 75 : 0;
+            const windSpeed = baseSpeed + Math.floor(Math.random() * speedVariation);
+            
+            let windClass = 'status-calm';
+            let windText = 'Normal';
+            if (windSpeed > 500) {
+                windClass = 'status-storm';
+                windText = 'High';
+            } else if (windSpeed > 450) {
+                windClass = 'status-active';
+                windText = 'Elevated';
+            }
+            
+            // Update UI
+            document.getElementById('solar-activity').textContent = activityLevel;
+            document.getElementById('solar-wind').textContent = windSpeed + ' km/s';
+            document.getElementById('geo-field').textContent = fieldStatus;
+            
+            const statuses = document.querySelectorAll('.data-status');
+            statuses[0].className = 'data-status ' + activityStatus;
+            statuses[0].textContent = activityText;
+            
+            statuses[1].className = 'data-status ' + windClass;
+            statuses[1].textContent = windText;
+            
+            statuses[2].className = 'data-status ' + fieldClass;
+            statuses[2].textContent = fieldText;
+            
+            // Show notification if there's high activity
+            if (activityLevel === 'High' && !sessionStorage.getItem('alertShown')) {
+                setTimeout(() => {
+                    showAchievement('⚠️ High solar activity detected! Check the NASA Fleet section for details.');
+                    sessionStorage.setItem('alertShown', 'true');
+                }, 3000);
+            }
+            
+            // Add recent events info
+            updateRecentEvents(recentCMEs, recentFlares, recentStorms);
+        }
+        
+        function updateRecentEvents(cmes, flares, storms) {
+            const widget = document.querySelector('.live-data-widget');
+            let eventsHTML = widget.querySelector('.recent-events');
+            
+            if (!eventsHTML) {
+                eventsHTML = document.createElement('div');
+                eventsHTML.className = 'recent-events';
+                eventsHTML.style.marginTop = '30px';
+                eventsHTML.style.textAlign = 'left';
+                widget.appendChild(eventsHTML);
+            }
+            
+            let content = '<h4 style="color: var(--color-purple-dark); margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> Recent Events (Last 7 Days)</h4>';
+            
+            if (cmes.length === 0 && flares.length === 0 && storms.length === 0) {
+                content += '<p style="color: #666;">No significant space weather events detected.</p>';
+            } else {
+                content += '<ul style="list-style: none; padding: 0;">';
+                
+                flares.slice(0, 3).forEach(flare => {
+                    const date = new Date(flare.beginTime).toLocaleDateString();
+                    const className = flare.classType || 'Unknown';
+                    content += `<li style="padding: 8px; background: #E3F2FD; margin: 5px 0; border-radius: 8px;">
+                        ☀️ <strong>Solar Flare</strong> (${className}) - ${date}
+                    </li>`;
+                });
+                
+                cmes.slice(0, 3).forEach(cme => {
+                    const date = new Date(cme.activityID).toLocaleDateString();
+                    content += `<li style="padding: 8px; background: #FFE082; margin: 5px 0; border-radius: 8px;">
+                        💫 <strong>CME Detected</strong> - ${date}
+                    </li>`;
+                });
+                
+                storms.slice(0, 2).forEach(storm => {
+                    const date = new Date(storm.startTime).toLocaleDateString();
+                    content += `<li style="padding: 8px; background: #FFCDD2; margin: 5px 0; border-radius: 8px;">
+                        ⚡ <strong>Geomagnetic Storm</strong> - ${date}
+                    </li>`;
+                });
+                
+                content += '</ul>';
+            }
+            
+            eventsHTML.innerHTML = content;
+        }
+        
+        // Simulate live space weather data (fallback)
+        function updateSpaceWeather() {
+            const activities = ['Low', 'Moderate', 'High'];
+            const winds = [342, 387, 425, 468, 512];
+            const fields = ['Quiet', 'Active', 'Storm'];
+            
+            const activity = activities[Math.floor(Math.random() * activities.length)];
+            const wind = winds[Math.floor(Math.random() * winds.length)];
+            const field = fields[Math.floor(Math.random() * fields.length)];
+            
+            document.getElementById('solar-activity').textContent = activity;
+            document.getElementById('solar-wind').textContent = wind + ' km/s';
+            document.getElementById('geo-field').textContent = field;
+            
+            // Update status indicators
+            const activityStatus = document.querySelectorAll('.data-status')[0];
+            const windStatus = document.querySelectorAll('.data-status')[1];
+            const fieldStatus = document.querySelectorAll('.data-status')[2];
+            
+            activityStatus.className = 'data-status ' + (activity === 'Low' ? 'status-calm' : activity === 'Moderate' ? 'status-active' : 'status-storm');
+            activityStatus.textContent = activity === 'Low' ? 'Calm' : activity === 'Moderate' ? 'Active' : 'Warning';
+            
+            windStatus.className = 'data-status ' + (wind < 400 ? 'status-calm' : wind < 500 ? 'status-active' : 'status-storm');
+            windStatus.textContent = wind < 400 ? 'Normal' : wind < 500 ? 'Elevated' : 'High';
+            
+            fieldStatus.className = 'data-status ' + (field === 'Quiet' ? 'status-calm' : field === 'Active' ? 'status-active' : 'status-storm');
+            fieldStatus.textContent = field === 'Quiet' ? 'Stable' : field === 'Active' ? 'Active' : 'Storm';
+        }
+
+        // Fetch NASA data on load and every 5 minutes
+        fetchNASAData();
+        setInterval(fetchNASAData, 5 * 60 * 1000);
+
+        // Scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.character-card, .game-card, .download-card, .info-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            sectionObserver.observe(el);
+        });
+
+        // Stagger effect for character cards
+        document.querySelectorAll('.character-card').forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.1}s`;
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                clearInterval(gameInterval);
+                clearInterval(gameTimerInterval);
+                gameActive = false;
+            }
+        });
+
+        // Print certificate function (for achievements)
+        function printCertificate(characterName) {
+            const certificate = `
+                <div style="text-align: center; padding: 40px; font-family: Arial;">
+                    <h1 style="color: #7B1FA2; font-size: 3rem;">🏆 Certificate of Achievement 🏆</h1>
+                    <p style="font-size: 1.5rem; margin: 30px 0;">This certifies that</p>
+                    <h2 style="font-size: 2.5rem; color: #FF7043; margin: 20px 0;">[Your Name]</h2>
+                    <p style="font-size: 1.5rem; margin: 30px 0;">has successfully learned about</p>
+                    <h2 style="font-size: 2rem; color: #7B1FA2;">${characterName}</h2>
+                    <p style="margin-top: 40px; font-size: 1.2rem;">Space Weather Explorer</p>
+                    <p style="margin-top: 20px;">Date: ${new Date().toLocaleDateString()}</p>
+                </div>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(certificate);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Add sound effects (optional - can be enhanced with actual audio files)
+        function playSound(type) {
+            // Placeholder for sound effects
+            // In production, you'd load and play actual audio files
+            console.log(`Playing ${type} sound`);
+        }
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            if (konamiCode.length > 10) konamiCode.shift();
+            
+            if (konamiCode.join(',') === konamiSequence.join(',')) {
+                showAchievement('🎮 Konami Code Activated! You found the secret!');
+                document.body.style.animation = 'rainbow 5s infinite';
+            }
+        });
+
+        // Auto-save progress
+        setInterval(() => {
+            const progress = {
+                highScores: highScores,
+                charactersRead: Array.from(charactersRead),
+                lastVisit: new Date().toISOString()
+            };
+            // In a real app, you'd save this to localStorage or a backend
+            console.log('Progress saved:', progress);
+        }, 30000);
+
+        // Welcome message
+        setTimeout(() => {
+            showAchievement('Welcome to Stormy the Solar Storm! 🌞');
+        }, 2000);
+
+        // Track time spent on site
+        let timeOnSite = 0;
+        setInterval(() => {
+            timeOnSite++;
+            if (timeOnSite === 60) {
+                showAchievement('You\'ve been exploring for 1 minute! Keep going!');
+            } else if (timeOnSite === 300) {
+                showAchievement('🌟 5 minutes of learning! You\'re a space weather expert!');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
